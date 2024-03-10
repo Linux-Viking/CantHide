@@ -8,7 +8,6 @@ unzip
 p7zip
 steghide
 exiftool
-ar
 cpio
 bzip2
 tar
