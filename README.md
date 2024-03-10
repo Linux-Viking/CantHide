@@ -10,16 +10,16 @@ steghide
 exiftool
 
 For Debian-based systems (Ubuntu, etc.):
-sudo apt-get update && sudo apt-get install -y unzip p7zip-full steghide libimage-exiftool-perl
+`sudo apt-get update && sudo apt-get install -y unzip p7zip-full steghide libimage-exiftool-perl`
 
 For Red Hat-based systems (Fedora, CentOS, etc.):
 
-sudo yum install -y unzip p7zip p7zip-plugins steghide perl-Image-ExifTool
+'sudo yum install -y unzip p7zip p7zip-plugins steghide perl-Image-ExifTool'
 
 Usage
 
 To use canthide.sh, simply provide the target file as an argument:
-./canthide.sh target_file
+'./canthide.sh target_file'
 
 The script will automatically detect the file type and perform the necessary extraction, revealing any hidden data within the file.
 
