@@ -1,4 +1,4 @@
-canthide.sh is a versatile file analysis and extraction tool designed for uncovering hidden data within different file formats. It supports multiple archive formats and extracts plain text from binary files. Ideal for data forensics and cybersecurity, the script automates data extraction, simplifying the process of revealing concealed information.
+canthide.sh is a file analysis and extraction tool developed to uncover hidden data within various file formats. It supports multiple archive formats and extracts plain text from binary files. Originally designed for use in Capture The Flag (CTF) competitions, the tool is also applicable for legitimate data forensics tasks. canthide.sh automates the data extraction process, facilitating the discovery of concealed information in both competitive and professional settings.
 
 Installation
 Dependencies
@@ -17,13 +17,14 @@ lzma
 lzop
 xz-utils
 gzip
+binwalk
 
 For Debian-based systems (Ubuntu, etc.):
-`sudo apt-get update -y && sudo apt-get install unzip 7zip cpio bzip2 tar lzip lz4 lzma lzop xz-utils gzip steghide libimage-exiftool-perl -y`
+`sudo apt-get update -y && sudo apt-get install unzip 7zip cpio bzip2 tar lzip lz4 lzma lzop xz-utils gzip steghide libimage-exiftool-perl binwalk -y`
 
 For Red Hat-based systems (Fedora, CentOS, etc.):
 
-`sudo yum update -y && sudo yum install unzip p7zip cpio bzip2 tar lzip lz4 xz gzip steghide perl-Image-ExifTool -y`
+`sudo yum update -y && sudo yum install unzip p7zip cpio bzip2 tar lzip lz4 xz gzip steghide perl-Image-ExifTool binwalk -y`
 
 Usage
 
@@ -37,6 +38,7 @@ Features
 Supports extraction of mutliple archive formats.
 Extracts plain text from binary files.
 Attempts to use steghide to extract hidden data from files, with or without a passphrase.
+Attempts to use binwalk to extract embedded files.
 Exports extracted strings and metadata to separate files for further analysis.
 
 License

@@ -1,6 +1,8 @@
 #!/bin/bash
+# Authored by Linux Viking (https://github.com/Linux-Viking)
 
-#Dependency check 
+# Dependency check 
+
 command -v unzip &>/dev/null || { echo "Error: 'unzip' is not installed." >&2; exit 1; } 
 command -v 7z &>/dev/null || { echo "Error: '7z' is not installed." >&2; exit 1; } 
 command -v ar &>/dev/null || { echo "Error: 'ar' is not installed." >&2; exit 1; }
@@ -15,8 +17,16 @@ command -v xz &>/dev/null || { echo "Error: 'xz' is not installed." >&2; exit 1;
 command -v gzip &>/dev/null || { echo "Error: 'gzip' is not installed." >&2; exit 1; }
 command -v steghide &>/dev/null || { echo "Error: 'steghide' is not installed." >&2; exit 1; } 
 command -v exiftool &>/dev/null || { echo "Error: 'exiftool' is not installed." >&2; exit 1; }
+command -v binwalk &>/dev/null || { echo "Error: 'binwalk' is not installed." >&2; exit 1; }
 
 target=$1
+
+# Help message 
+
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "To use canthide.sh, simply provide the target file as an argument: ./canthide.sh target_file"
+    exit 0
+fi
 
 info=$(file "$target" | cut -d ":" -f 2 | cut -c 2- | cut -d "," -f 1)
 filename=$(basename "$target")
@@ -56,6 +66,7 @@ elif [[ $info == *"LZ4"* ]]; then
     lz4 -df "$target" "$target.out" >/dev/null 2>&1
     echo "Unzipped $target"
 
+# Last four archives require respective extensions 
 elif [[ $info == *"LZMA"* ]]; then 
     if [[ "${target##*.}" != "lzma" ]]; then
         mv "$target" "${target}.lzma"
@@ -94,7 +105,11 @@ else
     echo "Trying steghide..."
     steghide --extract --passphrase "$passphrase" -sf "$target" -f 
 
-    # Extract the strings and metadata to respective files
+    # Attempts to extract embedded files with binwalk
+    echo "Trying binwalk..."
+    binwalk -e "$target"
+
+    # Extracts strings and metadata to respective files
     echo "Exporting strings..."
     strings "$target" > "$filename"_strings.txt
     echo "Exporting metadata..." 
