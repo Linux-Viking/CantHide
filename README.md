@@ -32,7 +32,7 @@ Usage
 To use canthide.sh, simply provide the target file as an argument:
 `./canthide.sh target_file`
 
-An optional secondary argument can be used to set the target directory for the output: `./canthide.sh target_file target_directory`
+An optional secondary argument can be used to set the target directory for the output: `./canthide.sh target_file [target_directory]`
 
 If `target_directory` is not provided, the directory of `target_file` will be used.
 
