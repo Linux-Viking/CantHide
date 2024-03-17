@@ -37,7 +37,7 @@ An optional secondary argument can be used to set the target directory for the o
 If `target_directory` is not provided, the directory of `target_file` will be used.
 
 
-The script will detect the file type and prompt for extraction, revealing any hidden data within the file.
+The script will detect the file type and authomatically extract, revealing any hidden data within the file.
 
 Features
 
