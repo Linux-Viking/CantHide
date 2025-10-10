@@ -193,7 +193,7 @@ try_steghide () {
 
 try_binwalk () {
     echo "Trying binwalk..."
-    binwalk -e "$target"
+    binwalk -Me --directory="$canthide_dir/" "$target"
 }
 
 # Exports strings and exiftool data to respective files
