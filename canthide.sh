@@ -9,7 +9,7 @@ target_dir=${2:-$(dirname "$target")}
 
 # Dependency array 
 
-dependencies=(unzip 7z shar ar cpio bzip2 tar lzip lz4 lzma lzop xz gzip steghide exiftool binwalk)
+dependencies=(steghide exiftool binwalk)
 
 # Help message check 
 
@@ -95,84 +95,47 @@ stage_directory () {
     mkdir -p "$target_dir/CantHide_${filename%.*}" || { echo "Error: Could not create CantHide directory in target_dir. Do you have permission?" >&2; exit 1; }
 }
 
-# Unzips if supported archive
+# Identifies if supported archive and recommends unarchiving tool
 
 archive_check () {
     if [[ $info == *"Zip"* ]]; then
-        unzip -o "$target" -d "$canthide_dir" >/dev/null 2>&1
-        echo "Unzipped $filename to $canthide_dir"
+        echo "File is a Zip archive. Recommend unarchiving with 'unzip'."
         
     elif [[ $info == *"7-zip"* ]]; then
-        7z x "$target" -aoa -o "$canthide_dir" >/dev/null 2>&1
-        echo "Unzipped $filename to $canthide_dir"
+        echo "File is a 7-zip archive. Recommend unarchiving with '7z'."
 
     elif [[ $info == *"ar archive"* ]]; then 
-        pushd "$canthide_dir" >/dev/null 2>&1
-        ar -x "$filename" >/dev/null 2>&1
-        echo "Unzipped $filename to $canthide_dir"
-        popd >/dev/null 2>&1
+        echo "File is an ar archive. Recommend unarchiving with 'ar'."
 
     elif [[ $info == *"cpio archive"* ]]; then
-        pushd "$canthide_dir" >/dev/null 2>&1
-        cpio -idu < "$target" >/dev/null 2>&1
-        echo "Unzipped $filename to $canthide_dir"
-        popd >/dev/null 2>&1
+        echo "File is a cpio archive. Recommend unarchiving with 'cpio'."
 
     elif [[ $info == *"bzip2"* ]]; then
-        pushd "$canthide_dir" >/dev/null 2>&1
-        bzip2 -df "$target" >/dev/null 2>&1
-        echo "Unzipped $filename to $canthide_dir"
-        popd >/dev/null 2>&1
+        echo "File is a bzip2 compressed file. Recommend unarchiving with 'bzip2'."
 
     elif [[ $info == *"tar"* ]]; then
-        tar -xf "$target" -C "$canthide_dir" --overwrite >/dev/null 2>&1
-        echo "Unzipped $filename to $canthide_dir"
+        echo "File is a tar archive. Recommend unarchiving with 'tar'."
 
     elif [[ $info == *"lzip"* ]]; then 
-        lzip -df "$target" > "$canthide_dir/${filename%.lz}" 2>dev/null
-        echo "Unzipped $filename to $canthide_dir"
+        echo "File is an lzip compressed file. Recommend unarchiving with 'lzip'."
 
     elif [[ $info == *"LZ4"* ]]; then 
-        lz4 -df "$target" "$canthide_dir/${filename%.lz4}" >/dev/null 2>&1
-        echo "Unzipped $filename to $canthide_dir"
+        echo "File is an LZ4 compressed file. Recommend unarchiving with 'lz4'."
 
     elif [[ $info == "shell archive text" ]]; then 
-        shar -x "$target" > "$canthide_dir/$filename.sh" 2>&1
-        echo "Unzipped $filename to $canthide_dir"
-
-    # Last four archives require respective extensions 
+        echo "File is a shell archive. Recommend unarchiving with 'shar'."
 
     elif [[ $info == *"LZMA"* ]]; then 
-        if [[ "${target##*.}" != "lzma" ]]; then
-            mv "$target" "${target}.lzma"
-            target="${filename}.lzma"
-        fi
-        lzma -df "$target" > "$canthide_dir/${filename%.lzma}" 2>/dev/null
-        echo "Unzipped $filename to $canthide_dir"
+        echo "File is an LZMA compressed file. Recommend unarchiving with 'lzma'."
             
     elif [[ $info == *"lzo"* ]]; then 
-        if [[ "${target##*.}" != "lzo" ]]; then
-            mv "$target" "${target}.lzo"
-            target="${filename}.lzo"
-        fi
-        lzop -df "$target" > "$canthide_dir/${filename%.lzo}" 2>/dev/null
-        echo "Unzipped $filename to $canthide_dir"
+        echo "File is an lzo compressed file. Recommend unarchiving with 'lzop'."
             
     elif [[ $info == *"XZ"* ]]; then 
-        if [[ "${target##*.}" != "xz" ]]; then
-            mv "$target" "${target}.xz"
-            target="${filename}.xz"
-        fi
-        xz -df "$target" > "$canthide_dir/${filename%.xz}" 2>/dev/null
-        echo "Unzipped $filename to $canthide_dir"
+        echo "File is an XZ compressed file. Recommend unarchiving with 'xz'."
 
-        elif [[ $info == *"gzip"* ]]; then 
-            if [[ "${target##*.}" != "gz" ]]; then
-                mv $target "${target}.gz"
-                target="${filename}.gz"
-            fi
-        gzip -df "$target" > "$canthide_dir/${filename%.gz}" 2>/dev/null
-        echo "Unzipped $filename to $canthide_dir"
+    elif [[ $info == *"gzip"* ]]; then 
+        echo "File is a gzip compressed file. Recommend unarchiving with 'gzip'."
 
     else 
         echo "$filename is not a supported archive" 
